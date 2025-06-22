@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Posts</title>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs/plugin/relativeTime.js"></script>
+    <script>
+      dayjs.extend(dayjs_plugin_relativeTime);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      .back-to-profile {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="min-h-screen w-full bg-zinc-900 text-white relative">
+      <!-- Back to Profile Button -->
+      <a
+        href="/profile"
+        class="back-to-profile bg-blue-500 text-white p-2 rounded-md cursor-pointer hover:bg-blue-600"
+      >
+        Back to Profile
+      </a>
+
+      <h1 class="text-3xl text-center pt-5">Random Posts</h1>
+      <div class="postcontainer grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 sm:px-10 mt-5">
+        <% posts.forEach(function(post) { %>
+          <div class="post border-2 border-zinc-500 bg-zinc-800 rounded-md p-5">
+            <div class="flex items-center mb-3">
+              <img
+                src="/images/uploads/<%= post.user.profilepic %>"
+                alt="Profile Picture"
+                class="w-10 h-10 rounded-full border-2 border-white mr-3"
+              />
+              <h2 class="text-xl"><%= post.user.username %></h2>
+            </div>
+            <p class="text-sm"><%= post.content %></p>
+            <p class="text-xs text-gray-400 mt-2">
+              Posted <span class="relative-time" data-time="<%= post.createdAt %>"></span>
+            </p>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+    <script>
+      // Convert timestamps to relative time
+      document.querySelectorAll(".relative-time").forEach((element) => {
+        const time = element.getAttribute("data-time");
+        element.textContent = dayjs(time).fromNow();
+      });
+    </script>
+  </body>
+</html>

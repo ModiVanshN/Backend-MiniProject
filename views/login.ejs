@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <div class="w-screen min-h-screen bg-zinc-900">
+        <form action="/login" method="post" class="p-10 text-white">
+            <h1 class="mb-4 text-3xl">User Login</h1>
+            <input type="text" name="email" placeholder="Email" class="border-2 border-zinc-500 bg-zinc-800 text-white p-2 rounded-md mr-3" />
+            <input type="password" name="password" placeholder="Password" class="border-2 border-zinc-500 bg-zinc-800 text-white p-2 rounded-md mr-3" />
+            <input type="submit" value="Login User" class="bg-blue-500 text-white p-2 rounded-md cursor-pointer" />
+        </form>
+    </div>
+  </body>
+</html>

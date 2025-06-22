@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs/plugin/relativeTime.js"></script>
+    <script>
+      dayjs.extend(dayjs_plugin_relativeTime);
+    </script>
+    <style>
+      .logout-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="text-white p-5 sm:p-10 min-h-screen w-screen bg-zinc-900 relative"
+    >
+      <input
+        type="button"
+        value="Logout"
+        class="logout-button bg-red-500 text-white p-2 rounded-md cursor-pointer"
+        onclick="location.href='/logout'"
+      />
+
+      <div class="text-center sm:text-left  ">
+        <div class="ml-10 mt-10 w-20 h-20 sm:w-32 sm:h-32 rounded-md">
+          <a href="/profile/upload">
+            <img
+              class="w-full h-full object-cover border-4 border-white rounded-lg cursor-pointer"
+              src="/images/uploads/<%= user.profilepic %>"
+              alt="Profile Picture"
+            />
+          </a>
+        </div>
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl pt-5 sm:pl-10">
+          Hello, <%= user.name %> 😎
+        </h1>
+      </div>
+      <h3 class="font-light text-sm px-5 sm:px-10 mt-5">Let's Create</h3>
+      <form action="/post" method="post" class="px-5 sm:px-10">
+        <textarea
+          class="p-3 sm:p-5 block w-full sm:w-3/4 mt-5 resize-none bg-transparent border-2 border-zinc-500 rounded-md"
+          rows="3"
+          name="content"
+          placeholder="What's on your mind?"
+        ></textarea>
+        <input
+          type="submit"
+          value="Create Post"
+          class="w-full sm:w-auto bg-blue-500 text-white p-2 rounded-md cursor-pointer mt-5"
+        />
+      </form>
+      <h3 class="font-light text-3xl px-5 sm:px-10 mt-5">Your Posts</h3>
+      <div class="postcontainer grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 sm:px-10 mt-5">
+        <% user.posts.reverse().forEach(function(post) { %>
+          <div
+            class="post border-2 border-zinc-500 bg-zinc-800 rounded-md p-5"
+          >
+            <div class="flex items-center mb-3">
+              <img
+                src="/images/uploads/<%= user.profilepic %>"
+                alt=""
+                class="w-10 h-10 rounded-full border-2 border-white mr-3"
+              />
+              <h1 class="text-xl"><%= user.username %></h1>
+            </div>
+            <p class="text-sm"><%= post.content %></p>
+            <p class="text-xs text-gray-400 mt-2">
+              Posted <span class="relative-time" data-time="<%= post.createdAt %>"></span>
+            </p>
+            <small class="mt-2 inline-block"><%= (post.likes && Array.isArray(post.likes)) ? post.likes.length : 0 %> Likes</small>
+            <div class="btns flex gap-10 mt-6">
+              <a class="text-green-900 hover:text-green-500" href="/like/<%= post._id %>">
+                <%= (post.likes && post.likes.indexOf(user._id) === -1) ? 'Like' : 'Unlike' %>
+              </a>
+              <a class="text-zinc-500 hover:text-zinc-100 cursor-pointer" onclick="toggleEditForm('<%= post._id %>')">Edit</a>
+            </div>
+            <form
+              id="edit-form-<%= post._id %>"
+              action="/edit/<%= post._id %>"
+              method="post"
+              class="hidden mt-4"
+            >
+              <textarea
+                name="content"
+                class="w-full p-2 border border-gray-500 rounded-md bg-zinc-800 text-white"
+                rows="3"
+              ><%= post.content %></textarea>
+              <button
+                type="submit"
+                class="bg-blue-500 text-white p-2 rounded-md mt-2 cursor-pointer"
+              >
+                Save
+              </button>
+            </form>
+          </div>
+        <% }) %>
+      </div>
+      <div class="px-5 sm:px-10 mt-5">
+        <a href="/random-posts" class="text-blue-500 hover:underline">View Random Posts</a>
+      </div>
+    </div>
+    <script>
+      // Convert timestamps to relative time
+      document.querySelectorAll('.relative-time').forEach((element) => {
+        const time = element.getAttribute('data-time');
+        element.textContent = dayjs(time).fromNow();
+      });
+
+      // Toggle edit form visibility
+      function toggleEditForm(postId) {
+        const form = document.getElementById(`edit-form-${postId}`);
+        form.classList.toggle('hidden');
+      }
+    </script>
+  </body>
+</html>
